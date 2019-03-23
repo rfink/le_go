@@ -58,7 +58,10 @@ func (logger *Logger) Close() error {
 
 // Opens a TCP connection to logentries.com
 func (logger *Logger) openConnection() error {
-	conn, err := tls.Dial("tcp", "data.logentries.com:443", &tls.Config{})
+	dialer := &net.Dialer{
+		Timeout: 10 * time.Second,
+	}
+	conn, err := tls.DialWithDialer(dialer, "tcp", "data.logentries.com:443", &tls.Config{})
 	if err != nil {
 		return err
 	}
